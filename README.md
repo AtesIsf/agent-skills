@@ -18,8 +18,12 @@ agent-skills/
 │   └── link-codex.sh       # OpenAI Codex
 ├── delta-checker/          # Pre-commit delta auditor for typos, variable slips, and logic bugs
 │   └── SKILL.md
-└── ponytail/               # "Lazy senior dev" minimalism skill
-    └── SKILL.md
+├── ponytail/               # "Lazy senior dev" minimalism skill
+│   └── SKILL.md
+└── sid/                    # Hardware architecture and specification consultant
+    ├── SKILL.md
+    └── scripts/
+        └── search-manuals.sh
 ```
 
 ---
@@ -37,6 +41,14 @@ agent-skills/
 ### `ponytail`
 * **Description**: Lazy senior developer mode. Enforces minimal complete changes, strict YAGNI ("the best code is the code never written"), and transparent reporting of what was skipped or unverified.
 * **Credits**: Adapted from the popular open-source repository [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) by Dietrich Gebert (licensed under MIT).
+
+### `sid`
+* **Description**: Hardware architecture and specification consultant. Uses local hardware manuals, datasheets, and specification documents to answer hardware queries, map software requirements to hardware mechanisms, and verify low-level interactions.
+* **Key Features**:
+  - **Workspace Setup**: Prompts for the manuals directory on first run and caches it in `.agents/sid.json`.
+  - **Software-to-Hardware Mapping**: Explains the necessary hardware (e.g., interrupt controllers, CSRs, timers, MMIO), register offsets, bitfield layouts, and initialization order when building low-level software like OS dispatchers or device drivers.
+  - **Hardware Deep Dive**: Demystifies magic registers, memory-mapped I/O, memory barriers/fences, and hardware/software responsibility boundaries.
+  - **Strictly Read-Only**: Never meddles with or modifies workspace code files; acts purely as an architectural advisor.
 
 ---
 
@@ -77,16 +89,19 @@ If you prefer to link skills manually or use workspace-specific linking:
 mkdir -p ~/.gemini/config/skills
 ln -sfn "$PWD/delta-checker" ~/.gemini/config/skills/delta-checker
 ln -sfn "$PWD/ponytail" ~/.gemini/config/skills/ponytail
+ln -sfn "$PWD/sid" ~/.gemini/config/skills/sid
 
 # Claude Code
 mkdir -p ~/.claude/skills
 ln -sfn "$PWD/delta-checker" ~/.claude/skills/delta-checker
 ln -sfn "$PWD/ponytail" ~/.claude/skills/ponytail
+ln -sfn "$PWD/sid" ~/.claude/skills/sid
 
 # Codex
 mkdir -p ~/.codex/skills
 ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
 ln -sfn "$PWD/ponytail" ~/.codex/skills/ponytail
+ln -sfn "$PWD/sid" ~/.codex/skills/sid
 ```
 
 ### Workspace / Project-Specific Setup
@@ -96,12 +111,12 @@ To link a skill into an individual project workspace:
 * **Antigravity / agy**:
   ```bash
   mkdir -p /path/to/project/.agents/skills
-  ln -sfn /path/to/agent-skills/delta-checker /path/to/project/.agents/skills/delta-checker
+  ln -sfn /path/to/agent-skills/sid /path/to/project/.agents/skills/sid
   ```
 * **Claude Code**:
   ```bash
   mkdir -p /path/to/project/.claude/skills
-  ln -sfn /path/to/agent-skills/delta-checker /path/to/project/.claude/skills/delta-checker
+  ln -sfn /path/to/agent-skills/sid /path/to/project/.claude/skills/sid
   ```
 
 ---
