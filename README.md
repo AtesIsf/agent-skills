@@ -16,9 +16,9 @@ agent-skills/
 │   ├── link-agy.sh         # Google Antigravity (agy)
 │   ├── link-claude.sh      # Claude Code
 │   └── link-codex.sh       # OpenAI Codex
-├── ponytail/               # Ponytail skill
+├── delta-checker/          # Pre-commit delta auditor for typos, variable slips, and logic bugs
 │   └── SKILL.md
-└── thought-partner/        # Scaffolding for thought-partner skill
+└── ponytail/               # "Lazy senior dev" minimalism skill
     └── SKILL.md
 ```
 
@@ -26,12 +26,17 @@ agent-skills/
 
 ## Skills
 
+### `delta-checker`
+* **Description**: Audits uncommitted workspace changes (staged and unstaged git diffs) using the "ponytail" lazy senior developer persona.
+* **Checks**:
+  - **Typos**: Misspelled identifiers, string keys, and parameters.
+  - **Wrong Variable Usage**: Copy-paste slips (e.g., using `width` instead of `height`, loop index confusion, swapped arguments).
+  - **Apparent Logic Bugs**: Inverted conditions, missing returns/awaits, off-by-one errors, unchecked nulls (evaluated statically without running code).
+* **Output**: A direct list of issues caught, succinct drop-in fixes, and a 1–2 line disclosure of what was skipped and risks.
+
 ### `ponytail`
 * **Description**: Lazy senior developer mode. Enforces minimal complete changes, strict YAGNI ("the best code is the code never written"), and transparent reporting of what was skipped or unverified.
 * **Credits**: Adapted from the popular open-source repository [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) by Dietrich Gebert (licensed under MIT).
-
-### `thought-partner`
-* **Description**: Minimal scaffolding for the `thought-partner` skill (unconfigured / ready for custom definition).
 
 ---
 
@@ -57,7 +62,7 @@ Links skills to `~/.codex/skills/`:
 ./scripts/link-codex.sh
 ```
 
-> **Note**: Each script accepts an optional custom destination directory as its first argument (e.g., `./scripts/link-agy.sh /custom/path/skills`).
+> **Note**: Each script accepts an optional custom destination directory as its first argument (e.g., `./scripts/link-agy.sh /custom/path/skills`). Because directory symlinks are used, changes to existing skills take effect immediately without re-running the script. Re-run only when adding a new skill directory.
 
 ---
 
@@ -70,18 +75,18 @@ If you prefer to link skills manually or use workspace-specific linking:
 ```bash
 # Antigravity (agy)
 mkdir -p ~/.gemini/config/skills
+ln -sfn "$PWD/delta-checker" ~/.gemini/config/skills/delta-checker
 ln -sfn "$PWD/ponytail" ~/.gemini/config/skills/ponytail
-ln -sfn "$PWD/thought-partner" ~/.gemini/config/skills/thought-partner
 
 # Claude Code
 mkdir -p ~/.claude/skills
+ln -sfn "$PWD/delta-checker" ~/.claude/skills/delta-checker
 ln -sfn "$PWD/ponytail" ~/.claude/skills/ponytail
-ln -sfn "$PWD/thought-partner" ~/.claude/skills/thought-partner
 
 # Codex
 mkdir -p ~/.codex/skills
+ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
 ln -sfn "$PWD/ponytail" ~/.codex/skills/ponytail
-ln -sfn "$PWD/thought-partner" ~/.codex/skills/thought-partner
 ```
 
 ### Workspace / Project-Specific Setup
@@ -91,12 +96,12 @@ To link a skill into an individual project workspace:
 * **Antigravity / agy**:
   ```bash
   mkdir -p /path/to/project/.agents/skills
-  ln -sfn /path/to/agent-skills/ponytail /path/to/project/.agents/skills/ponytail
+  ln -sfn /path/to/agent-skills/delta-checker /path/to/project/.agents/skills/delta-checker
   ```
 * **Claude Code**:
   ```bash
   mkdir -p /path/to/project/.claude/skills
-  ln -sfn /path/to/agent-skills/ponytail /path/to/project/.claude/skills/ponytail
+  ln -sfn /path/to/agent-skills/delta-checker /path/to/project/.claude/skills/delta-checker
   ```
 
 ---
