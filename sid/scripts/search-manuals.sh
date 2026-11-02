@@ -39,7 +39,17 @@ echo ""
 echo "=== Searching PDF files in $TARGET_DIR for '$QUERY' ==="
 if command -v pdftotext >/dev/null 2>&1; then
   find "$TARGET_DIR" -type f -name "*.pdf" | while read -r pdf; do
-    matches=$(pdftotext "$pdf" - 2>/dev/null | grep -in -C 1 -E "$QUERY" || true)
+    matches=$(pdftotext "$pdf" - 2>/dev/null | awk -v RS='\f' -v q="$QUERY" '
+      BEGIN { q_lower = tolower(q) }
+      tolower($0) ~ q_lower {
+        n = split($0, lines, "\n")
+        for (i = 1; i <= n; i++) {
+          if (tolower(lines[i]) ~ q_lower) {
+            print "  [Page " NR "] " lines[i]
+          }
+        }
+      }
+    ' || true)
     if [ -n "$matches" ]; then
       echo "--- Matches in $pdf ---"
       echo "$matches" | head -n 30

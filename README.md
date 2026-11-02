@@ -48,6 +48,7 @@ agent-skills/
   - **Workspace Setup**: Prompts for the manuals directory on first run and caches it in `.agents/sid.json`.
   - **Software-to-Hardware Mapping**: Explains the necessary hardware (e.g., interrupt controllers, CSRs, timers, MMIO), register offsets, bitfield layouts, and initialization order when building low-level software like OS dispatchers or device drivers.
   - **Hardware Deep Dive**: Demystifies magic registers, memory-mapped I/O, memory barriers/fences, and hardware/software responsibility boundaries.
+  - **Mandatory Source Citations**: Strictly cites source references (manual filename, section, and PDF page numbers or line numbers) for every detail to guarantee verifiable, hallucination-free guidance.
   - **Strictly Read-Only**: Never meddles with or modifies workspace code files; acts purely as an architectural advisor.
 
 ---
