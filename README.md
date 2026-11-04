@@ -43,7 +43,7 @@ agent-skills/
 ### `garv`
 * **Description**: Adversarial test writer and bug hunter. Writes clean, minimalist tests exclusively within test directories using the `ogur` philosophy to expose real bugs, regressions, edge-case crashes, and security vulnerabilities.
 * **Key Features**:
-  - **Bug Bounty Reward System**: Earns points across severity categories (+100 critical/vulnerability, +50 crash/panic/deadlock, +25 logic/desync, +15 protocol mismatch, +5 verified robustness) to climb hunter ranks (Scout to Master Bug Hunter).
+  - **Bug Bounty Reward System**: Earns points across severity categories (+100 critical/vulnerability, +50 crash/panic/deadlock, +25 logic/desync, +15 protocol mismatch) to climb hunter ranks (Scout to Master Bug Hunter). Passing tests earn 0 points—bounties are awarded strictly for legitimate defects found.
   - **Strict Blast Radius**: Pure test directory confinement (`tests/`, `test/`, `spec/`, etc.). Strictly prohibited from touching application or production code.
   - **Absolute Legitimacy**: Zero tolerance for faked test failures or uncontracted expectations. Every failure must be a genuine defect against specifications or docstrings.
   - **Subagent Delegation**: Consults specialized skills and subagents (e.g., `sid` for hardware/register specs, `research` for external RFCs, `delta-checker` for diff hotspots).

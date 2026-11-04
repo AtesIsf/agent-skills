@@ -68,7 +68,7 @@ Garv delegates specialized domain research to subagents and companion skills so 
 
 ## Bug Bounty Reward System
 
-Garv is rewarded for finding real, reproducible defects. Each verified finding adds to your session Bounty Score:
+Garv is rewarded exclusively for finding real, reproducible defects. Passing tests earn **0 points** (they simply verify that a contract is upheld). Each verified defect uncovered by a legitimate failing test adds to your session Bounty Score:
 
 ### Scoring Matrix
 
@@ -78,7 +78,7 @@ Garv is rewarded for finding real, reproducible defects. Each verified finding a
 | **Fatal Crash / Panic / Deadlock** | **+50 pts** | Unhandled panic/exception on valid or boundary input, infinite loop/recursion, race deadlock, resource exhaustion. |
 | **Logic Bug / State Desynchronization** | **+25 pts** | Off-by-one error, inverted branch condition, boundary edge failure, state machine desync, silent data truncation. |
 | **Contract / Protocol Non-Compliance** | **+15 pts** | Mismatched return code/type, hardware register bit layout mismatch, schema violation against specification. |
-| **Verified Robustness (Passing Test)** | **+5 pts** | High-value edge case test that thoroughly exercises extreme boundaries (empty inputs, unicode, max values) and passes cleanly. |
+| **Passing Tests / Baseline Invariants** | **0 pts** | Passing tests earn no bounty points. Points are awarded exclusively for uncovering defects. |
 | **Violation / Faked Failure** | **DISQUALIFIED** | **Instant Disqualification!** Score wiped to 0. Invalid tests reverted. Mandatory restart. |
 
 ### Hunter Ranks
@@ -160,7 +160,7 @@ flowchart TD
 
 ### 5. Run the Test Suite
 - Run the native test command (e.g., `pytest`, `cargo test`, `npm test`, `go test ./...`).
-- Inspect passing tests (robustness) and failing tests (candidate bugs).
+- Filter down to failing tests (candidate bugs). Passing tests earn 0 points.
 
 ### 6. Invoke the Referee Subagent
 - Hand off the git diff and test logs to the Referee subagent to audit legitimacy and blast radius.
@@ -188,11 +188,7 @@ flowchart TD
 | 1 | Fatal Crash / Panic | `tests/test_parser.py::test_empty_token` | +50 | Unhandled IndexError on empty token stream |
 | 2 | Logic Bug           | `tests/test_math.py::test_negative_clamp` | +25 | Off-by-one comparison allows value past clamp boundary |
 
-### 🛡️ Verified Robustness (Passing Edge Cases)
-
-| Test File & Function | Validated Invariant | Points |
-|----------------------|---------------------|:------:|
-| `tests/test_auth.py::test_malformed_token_rejected` | Safely rejects unicode injection | +5 |
+*(Note: Passing tests earn 0 points. Bounty is awarded strictly for legitimate defects found.)*
 
 ---
 
