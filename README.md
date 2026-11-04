@@ -6,30 +6,6 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
 
 ---
 
-## Repository Structure
-
-```text
-agent-skills/
-├── LICENSE                 # MIT License
-├── README.md               # Repository documentation and setup instructions
-├── scripts/                # Provider-specific linking scripts
-│   ├── link-agy.sh         # Google Antigravity (agy)
-│   ├── link-claude.sh      # Claude Code
-│   └── link-codex.sh       # OpenAI Codex
-├── delta-checker/          # Pre-commit delta auditor for typos, variable slips, and logic bugs
-│   └── SKILL.md
-├── garv/                   # Adversarial test writer and bug hunter with referee audit
-│   └── SKILL.md
-├── ogur/                   # "Lazy senior dev" minimalism skill (formerly ponytail)
-│   └── SKILL.md
-└── sid/                    # Hardware architecture and specification consultant
-    ├── SKILL.md
-    └── scripts/
-        └── search-manuals.sh
-```
-
----
-
 ## Skills
 
 ### `delta-checker`
