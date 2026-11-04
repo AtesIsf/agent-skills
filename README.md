@@ -18,7 +18,7 @@ agent-skills/
 │   └── link-codex.sh       # OpenAI Codex
 ├── delta-checker/          # Pre-commit delta auditor for typos, variable slips, and logic bugs
 │   └── SKILL.md
-├── ponytail/               # "Lazy senior dev" minimalism skill
+├── ogur/                   # "Lazy senior dev" minimalism skill (formerly ponytail)
 │   └── SKILL.md
 └── sid/                    # Hardware architecture and specification consultant
     ├── SKILL.md
@@ -31,15 +31,15 @@ agent-skills/
 ## Skills
 
 ### `delta-checker`
-* **Description**: Audits uncommitted workspace changes (staged and unstaged git diffs) using the "ponytail" lazy senior developer persona.
+* **Description**: Audits uncommitted workspace changes (staged and unstaged git diffs) using the "ogur" lazy senior developer persona.
 * **Checks**:
   - **Typos**: Misspelled identifiers, string keys, and parameters.
   - **Wrong Variable Usage**: Copy-paste slips (e.g., using `width` instead of `height`, loop index confusion, swapped arguments).
   - **Apparent Logic Bugs**: Inverted conditions, missing returns/awaits, off-by-one errors, unchecked nulls (evaluated statically without running code).
 * **Output**: A direct list of issues caught, succinct drop-in fixes, and a 1–2 line disclosure of what was skipped and risks.
 
-### `ponytail`
-* **Description**: Lazy senior developer mode. Enforces minimal complete changes, strict YAGNI ("the best code is the code never written"), and transparent reporting of what was skipped or unverified.
+### `ogur`
+* **Description**: Lazy senior developer mode (adapted from the ponytail philosophy). Enforces minimal complete changes, strict YAGNI ("the best code is the code never written"), and transparent reporting of what was skipped or unverified.
 * **Credits**: Adapted from the popular open-source repository [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) by Dietrich Gebert (licensed under MIT).
 
 ### `sid`
@@ -89,19 +89,19 @@ If you prefer to link skills manually or use workspace-specific linking:
 # Antigravity (agy)
 mkdir -p ~/.gemini/config/skills
 ln -sfn "$PWD/delta-checker" ~/.gemini/config/skills/delta-checker
-ln -sfn "$PWD/ponytail" ~/.gemini/config/skills/ponytail
+ln -sfn "$PWD/ogur" ~/.gemini/config/skills/ogur
 ln -sfn "$PWD/sid" ~/.gemini/config/skills/sid
 
 # Claude Code
 mkdir -p ~/.claude/skills
 ln -sfn "$PWD/delta-checker" ~/.claude/skills/delta-checker
-ln -sfn "$PWD/ponytail" ~/.claude/skills/ponytail
+ln -sfn "$PWD/ogur" ~/.claude/skills/ogur
 ln -sfn "$PWD/sid" ~/.claude/skills/sid
 
 # Codex
 mkdir -p ~/.codex/skills
 ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
-ln -sfn "$PWD/ponytail" ~/.codex/skills/ponytail
+ln -sfn "$PWD/ogur" ~/.codex/skills/ogur
 ln -sfn "$PWD/sid" ~/.codex/skills/sid
 ```
 
@@ -145,4 +145,4 @@ To link a skill into an individual project workspace:
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
-Credit for the `ponytail` skill belongs to [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail).
+Credit for the `ogur` (adapted from ponytail) skill belongs to [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail).
