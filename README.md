@@ -18,6 +18,8 @@ agent-skills/
 │   └── link-codex.sh       # OpenAI Codex
 ├── delta-checker/          # Pre-commit delta auditor for typos, variable slips, and logic bugs
 │   └── SKILL.md
+├── garv/                   # Adversarial test writer and bug hunter with referee audit
+│   └── SKILL.md
 ├── ogur/                   # "Lazy senior dev" minimalism skill (formerly ponytail)
 │   └── SKILL.md
 └── sid/                    # Hardware architecture and specification consultant
@@ -37,6 +39,15 @@ agent-skills/
   - **Wrong Variable Usage**: Copy-paste slips (e.g., using `width` instead of `height`, loop index confusion, swapped arguments).
   - **Apparent Logic Bugs**: Inverted conditions, missing returns/awaits, off-by-one errors, unchecked nulls (evaluated statically without running code).
 * **Output**: A direct list of issues caught, succinct drop-in fixes, and a 1–2 line disclosure of what was skipped and risks.
+
+### `garv`
+* **Description**: Adversarial test writer and bug hunter. Writes clean, minimalist tests exclusively within test directories using the `ogur` philosophy to expose real bugs, regressions, edge-case crashes, and security vulnerabilities.
+* **Key Features**:
+  - **Bug Bounty Reward System**: Earns points across severity categories (+100 critical/vulnerability, +50 crash/panic/deadlock, +25 logic/desync, +15 protocol mismatch, +5 verified robustness) to climb hunter ranks (Scout to Master Bug Hunter).
+  - **Strict Blast Radius**: Pure test directory confinement (`tests/`, `test/`, `spec/`, etc.). Strictly prohibited from touching application or production code.
+  - **Absolute Legitimacy**: Zero tolerance for faked test failures or uncontracted expectations. Every failure must be a genuine defect against specifications or docstrings.
+  - **Subagent Delegation**: Consults specialized skills and subagents (e.g., `sid` for hardware/register specs, `research` for external RFCs, `delta-checker` for diff hotspots).
+  - **Independent Referee Audit & Restart**: Dispatches an independent Referee subagent at the end of each run to verify test legitimacy and blast radius. Any rule violation results in **immediate disqualification**, zeroed points, reverted files, and a mandatory restart.
 
 ### `ogur`
 * **Description**: Lazy senior developer mode (adapted from the ponytail philosophy). Enforces minimal complete changes, strict YAGNI ("the best code is the code never written"), and transparent reporting of what was skipped or unverified.
@@ -89,18 +100,21 @@ If you prefer to link skills manually or use workspace-specific linking:
 # Antigravity (agy)
 mkdir -p ~/.gemini/config/skills
 ln -sfn "$PWD/delta-checker" ~/.gemini/config/skills/delta-checker
+ln -sfn "$PWD/garv" ~/.gemini/config/skills/garv
 ln -sfn "$PWD/ogur" ~/.gemini/config/skills/ogur
 ln -sfn "$PWD/sid" ~/.gemini/config/skills/sid
 
 # Claude Code
 mkdir -p ~/.claude/skills
 ln -sfn "$PWD/delta-checker" ~/.claude/skills/delta-checker
+ln -sfn "$PWD/garv" ~/.claude/skills/garv
 ln -sfn "$PWD/ogur" ~/.claude/skills/ogur
 ln -sfn "$PWD/sid" ~/.claude/skills/sid
 
 # Codex
 mkdir -p ~/.codex/skills
 ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
+ln -sfn "$PWD/garv" ~/.codex/skills/garv
 ln -sfn "$PWD/ogur" ~/.codex/skills/ogur
 ln -sfn "$PWD/sid" ~/.codex/skills/sid
 ```
@@ -112,11 +126,13 @@ To link a skill into an individual project workspace:
 * **Antigravity / agy**:
   ```bash
   mkdir -p /path/to/project/.agents/skills
+  ln -sfn /path/to/agent-skills/garv /path/to/project/.agents/skills/garv
   ln -sfn /path/to/agent-skills/sid /path/to/project/.agents/skills/sid
   ```
 * **Claude Code**:
   ```bash
   mkdir -p /path/to/project/.claude/skills
+  ln -sfn /path/to/agent-skills/garv /path/to/project/.claude/skills/garv
   ln -sfn /path/to/agent-skills/sid /path/to/project/.claude/skills/sid
   ```
 
