@@ -8,6 +8,16 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
 
 ## Skills
 
+### `brainstorming`
+* **Description**: Explores ideas, requirements, and technical trade-offs through collaborative dialogue to produce validated design documents before writing code.
+* **Key Principles**:
+  - **Context-First**: Checks existing project state, repository files, and recent commits first.
+  - **One Question at a Time**: Asks focused questions iteratively (preferring multiple-choice) to clarify purpose, constraints, and success criteria without overwhelming the user.
+  - **Explore Alternatives**: Proposes 2–3 technical approaches with trade-offs and recommendations before settling on a design.
+  - **Incremental Validation**: Breaks the design into 200–300 word sections, confirming each part before proceeding.
+  - **Design Documentation**: Records the finalized design in `docs/plans/YYYY-MM-DD-<topic>-design.md` before transitioning to implementation planning.
+* **Credits**: Adapted from the open-source repository [obra/superpowers](https://github.com/obra/superpowers) by Jesse Vincent (licensed under MIT).
+
 ### `delta-checker`
 * **Description**: Audits uncommitted workspace changes (staged and unstaged git diffs) using the "ogur" lazy senior developer persona.
 * **Checks**:
@@ -75,6 +85,7 @@ If you prefer to link skills manually or use workspace-specific linking:
 ```bash
 # Antigravity (agy)
 mkdir -p ~/.gemini/config/skills
+ln -sfn "$PWD/brainstorming" ~/.gemini/config/skills/brainstorming
 ln -sfn "$PWD/delta-checker" ~/.gemini/config/skills/delta-checker
 ln -sfn "$PWD/garv" ~/.gemini/config/skills/garv
 ln -sfn "$PWD/ogur" ~/.gemini/config/skills/ogur
@@ -82,6 +93,7 @@ ln -sfn "$PWD/sid" ~/.gemini/config/skills/sid
 
 # Claude Code
 mkdir -p ~/.claude/skills
+ln -sfn "$PWD/brainstorming" ~/.claude/skills/brainstorming
 ln -sfn "$PWD/delta-checker" ~/.claude/skills/delta-checker
 ln -sfn "$PWD/garv" ~/.claude/skills/garv
 ln -sfn "$PWD/ogur" ~/.claude/skills/ogur
@@ -89,6 +101,7 @@ ln -sfn "$PWD/sid" ~/.claude/skills/sid
 
 # Codex
 mkdir -p ~/.codex/skills
+ln -sfn "$PWD/brainstorming" ~/.codex/skills/brainstorming
 ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
 ln -sfn "$PWD/garv" ~/.codex/skills/garv
 ln -sfn "$PWD/ogur" ~/.codex/skills/ogur
@@ -137,4 +150,5 @@ To link a skill into an individual project workspace:
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
+Credit for the `brainstorming` skill belongs to [obra/superpowers](https://github.com/obra/superpowers) by Jesse Vincent.
 Credit for the `ogur` (adapted from ponytail) skill belongs to [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail).
