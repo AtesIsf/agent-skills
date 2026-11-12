@@ -42,7 +42,7 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
 ### `sid`
 * **Description**: Hardware architecture and specification consultant. Uses local hardware manuals, datasheets, and specification documents to answer hardware queries, map software requirements to hardware mechanisms, and verify low-level interactions.
 * **Key Features**:
-  - **Workspace Setup**: Prompts for the manuals directory on first run and caches it in `.agents/sid.json`.
+  - **Hardware Manuals Discovery**: Automatically discovers manuals in user library directories (such as `~/Documents/hardware`), common project paths (`./manuals`, `./docs/hardware`, `./specs`), global configuration (`~/.agents/sid.json`), or workspace settings (`.agents/sid.json`).
   - **Software-to-Hardware Mapping**: Explains the necessary hardware (e.g., interrupt controllers, CSRs, timers, MMIO), register offsets, bitfield layouts, and initialization order when building low-level software like OS dispatchers or device drivers.
   - **Hardware Deep Dive**: Demystifies magic registers, memory-mapped I/O, memory barriers/fences, and hardware/software responsibility boundaries.
   - **Mandatory Source Citations**: Strictly cites source references (manual filename, section, and PDF page numbers or line numbers) for every detail to guarantee verifiable, hallucination-free guidance.
