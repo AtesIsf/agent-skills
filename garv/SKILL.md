@@ -2,8 +2,8 @@
 name: garv
 description: >-
   Adversarial test writer and bug hunter. Orchestrates a 4-stage subagent chain
-  (scout on low thinking -> planner on high thinking -> worker on medium thinking
-  -> reviewer as referee on medium thinking) using existing subagent primitives to
+  (scout on low thinking -> planner on high thinking -> worker on low thinking
+  -> reviewer as referee on high thinking) using existing subagent primitives to
   uncover real bugs, regressions, crashes, edge cases, and security vulnerabilities
   without cluttering conversation context. Writes clean, minimalist tests in test
   directories only using the ogur philosophy and scores verified defects via a bug
@@ -30,8 +30,8 @@ Garv executes as a strictly divided 4-stage pipeline across existing subagent pr
 ```mermaid
 flowchart TD
     S1[1. scout - low thinking<br/>Read codebase, interfaces, test conventions] --> S2[2. planner - high thinking<br/>Design adversarial test plan & hypotheses]
-    S2 --> S3[3. worker - medium thinking<br/>Implement Ogur tests in test dir & run runner]
-    S3 --> S4[4. reviewer / referee - medium thinking<br/>Audit blast radius, verify legitimacy, score bounty]
+    S2 --> S3[3. worker - low thinking<br/>Implement Ogur tests in test dir & run runner]
+    S3 --> S4[4. reviewer / referee - high thinking<br/>Audit blast radius, verify legitimacy, score bounty]
 ```
 
 ### 1. `scout` (thinking: "low")
@@ -47,13 +47,13 @@ flowchart TD
   - *Absolute Legitimacy*: ZERO fake failures. Every scenario must test real, legitimate contract expectations.
   - *Ogur Clean Code Minimalism*: Arrange-Act-Assert structure, zero bloat or heavy mocks.
 
-### 3. `worker` (thinking: "medium")
+### 3. `worker` (thinking: "low")
 - **Responsibility**: Implementation and test execution. Consumes the planner's plan (`{previous}`).
 - Writes minimal Ogur-style tests exclusively in the designated test directory.
 - Executes the native test runner via bash.
 - Collects test execution output and candidate failures for the Referee audit.
 
-### 4. `reviewer` (Referee) (thinking: "medium")
+### 4. `reviewer` (Referee) (thinking: "high")
 - **Responsibility**: Independent Referee audit and Bounty Board certification. Consumes the worker's output (`{previous}`).
 - Audits blast radius via `git status` and `git diff` (verifies NO production code was touched).
 - Audits legitimacy: verifies failing tests represent genuine defects against real specifications/contracts, not faked assertions or mock sabotage.
@@ -82,12 +82,12 @@ subagent({
     },
     {
       "agent": "worker",
-      "thinking": "medium",
+      "thinking": "low",
       "task": "Execute the Garv adversarial test plan:\n\n{previous}\n\nStrict Blast Radius & Cleanliness Rules:\n1. You are strictly a test author. Create/edit files ONLY inside designated test directories (e.g. tests/, test/, spec/, *_test.go). NEVER touch application or production code.\n2. Write Ogur-style tests: clean, minimal, high-signal Arrange-Act-Assert tests using the native test framework.\n3. Run the native test command using bash to execute the new tests and observe the real results.\n4. Output: list of created/modified test files, full test runner execution command and output, and a breakdown of candidate failing tests (bugs found) vs. passing tests."
     },
     {
       "agent": "reviewer",
-      "thinking": "medium",
+      "thinking": "high",
       "task": "You are the official Garv Referee. Your task is to audit the tests just authored and executed by the worker:\n\n{previous}\n\nExecute the Garv Referee Verification Checklist strictly:\n1. BLAST RADIUS: Run `git status` and `git diff`. Verify that ONLY files inside designated test directories were created or modified. If any non-test file was touched, issue an immediate DISQUALIFIED verdict and revert offending files.\n2. LEGITIMACY AUDIT: For every failing test, cross-reference the assertion against the code contract, docstring, or specification. Verify that the failure represents a REAL bug in the codebase, NOT a faked expectation, incorrect test assertion, or artificial mock sabotage.\n3. OGUR SIMPLICITY: Verify tests are clean, minimal, and free of over-engineered boilerplate.\n4. TALLY & VERDICT:\n   - If ANY rule is broken: Issue DISQUALIFIED with the exact reason and list of invalid files to revert (`git checkout -- <file>`).\n   - If clean: Ratify Bounty Points for each legitimate defect (+100 Critical, +50 Fatal Crash/Panic, +25 Logic Bug, +15 Contract Mismatch; 0 for passing tests), certify the Hunter Rank, and output the complete CERTIFIED Garv Bounty Board Report.\n\nUse the official Certified Bounty Board Output Format:\n# 🎯 Garv Bounty Report: [Target Component]\n**Referee Status**: ✅ CERTIFIED (Audited by Referee Subagent)\n**Total Bounty Score**: [Total Pts] pts | **Rank**: [Scout (1-25) / Tracker (26-75) / Senior Auditor (76-150) / Master Bug Hunter (151+)]\n\n### 🏆 Legitimate Defects Uncovered\n| # | Severity / Category | Test File & Function | Points | Bug Description |\n|---|---------------------|----------------------|:------:|-----------------|\n\n### 🔍 Defect Details & Recommended Patches\n#### Bug N: [Short Title]\n* **Failing Test**: `tests/path/to/test.py::test_name`\n* **Reproduction Command**: `pytest tests/path/to/test.py -k test_name`\n* **Root Cause Analysis**: [Clear, 2-line explanation of why the production code fails]\n* **Suggested Patch** *(Reminder: Garv does not edit production code directly)*:\n```diff\n[Unified diff patch]\n```"
     }
   ]
