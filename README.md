@@ -72,6 +72,12 @@ Links skills to `~/.codex/skills/`:
 ./scripts/link-codex.sh
 ```
 
+### 4. Pi Coding Agent (`link-pi.sh`)
+Links skills to `<agent-dir>/skills/` (defaults to `~/.pi/agent/skills/` or `$PI_CODING_AGENT_DIR/skills/`):
+```bash
+./scripts/link-pi.sh
+```
+
 > **Note**: Each script accepts an optional custom destination directory as its first argument (e.g., `./scripts/link-agy.sh /custom/path/skills`). Because directory symlinks are used, changes to existing skills take effect immediately without re-running the script. Re-run only when adding a new skill directory.
 
 ---
@@ -106,6 +112,14 @@ ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
 ln -sfn "$PWD/garv" ~/.codex/skills/garv
 ln -sfn "$PWD/ogur" ~/.codex/skills/ogur
 ln -sfn "$PWD/sid" ~/.codex/skills/sid
+
+# Pi Coding Agent
+mkdir -p ~/.pi/agent/skills
+ln -sfn "$PWD/brainstorming" ~/.pi/agent/skills/brainstorming
+ln -sfn "$PWD/delta-checker" ~/.pi/agent/skills/delta-checker
+ln -sfn "$PWD/garv" ~/.pi/agent/skills/garv
+ln -sfn "$PWD/ogur" ~/.pi/agent/skills/ogur
+ln -sfn "$PWD/sid" ~/.pi/agent/skills/sid
 ```
 
 ### Workspace / Project-Specific Setup
@@ -123,6 +137,12 @@ To link a skill into an individual project workspace:
   mkdir -p /path/to/project/.claude/skills
   ln -sfn /path/to/agent-skills/garv /path/to/project/.claude/skills/garv
   ln -sfn /path/to/agent-skills/sid /path/to/project/.claude/skills/sid
+  ```
+* **Pi Coding Agent**:
+  ```bash
+  mkdir -p /path/to/project/.pi/skills
+  ln -sfn /path/to/agent-skills/garv /path/to/project/.pi/skills/garv
+  ln -sfn /path/to/agent-skills/sid /path/to/project/.pi/skills/sid
   ```
 
 ---
