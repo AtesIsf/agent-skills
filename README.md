@@ -27,14 +27,14 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
 * **Output**: A direct list of issues caught, succinct drop-in fixes, and a 1–2 line disclosure of what was skipped and risks.
 
 ### `garv`
-* **Description**: Adversarial test writer and bug hunter. Orchestrates a 4-stage subagent chain (`scout` on low thinking -> `planner` on high thinking -> `worker` on low thinking -> `reviewer` as referee on high thinking) to write clean, minimalist tests exclusively within test directories using the `ogur` philosophy to expose real bugs, regressions, edge-case crashes, and security vulnerabilities without polluting conversation context.
+* **Description**: Adversarial test writer and bug hunter. Orchestrates a 4-stage subagent chain (`scout` on low thinking -> `planner` on high thinking -> `worker` on low thinking -> `reviewer` as referee on high thinking) with an automated disqualification retry loop to write clean, minimalist tests exclusively within test directories using the `ogur` philosophy to expose real bugs, regressions, edge-case crashes, and security vulnerabilities without polluting conversation context.
 * **Key Features**:
   - **Context-Preserving Subagent Chain**: Executes the entire bug-hunting workflow in isolated subagent context windows using existing primitives (`scout` -> `planner` -> `worker` -> `reviewer`), returning only the final certified report to the primary conversation.
   - **Calibrated Reasoning Effort**: Dispatches `scout` on low thinking for rapid codebase reconnaissance, `planner` on high thinking for deep adversarial scenario design, `worker` on low thinking for mechanical test implementation and runner execution, and `reviewer` on high thinking for rigorous referee verification and patch formulation.
   - **Bug Bounty Reward System**: Earns points across severity categories (+100 critical/vulnerability, +50 crash/panic/deadlock, +25 logic/desync, +15 protocol mismatch) to climb hunter ranks (Scout to Master Bug Hunter). Passing tests earn 0 points—bounties are awarded strictly for legitimate defects found.
   - **Strict Blast Radius**: Pure test directory confinement (`tests/`, `test/`, `spec/`, etc.). Strictly prohibited from touching application or production code.
   - **Absolute Legitimacy**: Zero tolerance for faked test failures or uncontracted expectations. Every failure must be a genuine defect against specifications or docstrings.
-  - **Independent Referee Audit & Restart**: Runs the Referee audit via `reviewer` at the conclusion of the chain to verify test legitimacy and blast radius. Any rule violation results in **immediate disqualification**, zeroed points, reverted files, and a mandatory restart.
+  - **Independent Referee Audit & Automated Retry Loop**: Dispatches `reviewer` as Referee at the end of each run to audit legitimacy and blast radius. If disqualified, invalid files are reverted and the orchestrator automatically re-dispatches the chain with corrective feedback (up to 2 retries) before presenting the final certified findings.
 
 ### `ogur`
 * **Description**: Lazy senior developer mode (adapted from the ponytail philosophy). Enforces minimal complete changes, strict YAGNI ("the best code is the code never written"), and transparent reporting of what was skipped or unverified.

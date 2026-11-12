@@ -3,12 +3,12 @@ name: garv
 description: >-
   Adversarial test writer and bug hunter. Orchestrates a 4-stage subagent chain
   (scout on low thinking -> planner on high thinking -> worker on low thinking
-  -> reviewer as referee on high thinking) using existing subagent primitives to
-  uncover real bugs, regressions, crashes, edge cases, and security vulnerabilities
-  without cluttering conversation context. Writes clean, minimalist tests in test
-  directories only using the ogur philosophy and scores verified defects via a bug
-  bounty system. Use when the user asks to write tests, hunt bugs, stress-test
-  code, or verify system contracts.
+  -> reviewer as referee on high thinking) with an automated disqualification
+  retry loop using existing subagent primitives to uncover real bugs, regressions,
+  crashes, edge cases, and security vulnerabilities without cluttering conversation
+  context. Writes clean, minimalist tests in test directories only using the ogur
+  philosophy and scores verified defects via a bug bounty system. Use when the user
+  asks to write tests, hunt bugs, stress-test code, or verify system contracts.
 ---
 
 # Garv — Adversarial Bug Hunter Orchestration
@@ -32,6 +32,8 @@ flowchart TD
     S1[1. scout - low thinking<br/>Read codebase, interfaces, test conventions] --> S2[2. planner - high thinking<br/>Design adversarial test plan & hypotheses]
     S2 --> S3[3. worker - low thinking<br/>Implement Ogur tests in test dir & run runner]
     S3 --> S4[4. reviewer / referee - high thinking<br/>Audit blast radius, verify legitimacy, score bounty]
+    S4 -->|DISQUALIFIED<br/>revert files, retry up to 2x| S2
+    S4 -->|CERTIFIED| S5[Present Certified Bounty Report]
 ```
 
 ### 1. `scout` (thinking: "low")
@@ -115,9 +117,29 @@ subagent({
 
 ---
 
-## Presenting the Final Report
+## Handling the Referee Verdict & Automated Retry Loop
 
-When the subagent chain completes:
-1. Present the referee's Certified Bounty Board Report directly to the user.
-2. Provide a 1–2 sentence summary of the hunt outcome (number of verified bugs found, points awarded, and rank achieved).
-3. If no bugs were found (all tests pass with 0 pts), confirm that baseline contracts and invariants were verified intact.
+When the subagent chain completes, inspect the final output from the Referee (`reviewer`):
+
+### Case 1: CERTIFIED ✅
+The referee has audited blast radius, ratified defect legitimacy, and signed off on the Bounty Board:
+1. Deliver the certified report directly to the user.
+2. Provide a 1–2 sentence summary of verified defects found, points awarded, and rank achieved.
+3. If no defects were found (all tests pass, 0 pts), confirm that baseline contracts and invariants were verified intact.
+
+### Case 2: DISQUALIFIED ❌ (Automated Retry Protocol)
+If the referee issues a `DISQUALIFIED` verdict (due to blast radius breach, fake failure, or uncontracted assertion):
+1. **Verify Clean Workspace**: Confirm that invalid or offending test files were reverted (`git status`). If any uncommitted invalid test files remain, run `git checkout -- <file>` or `rm <untracked_test_file>`.
+2. **Evaluate Retry Budget**: You are allowed up to **2 automated retries** (3 total attempts per session).
+3. **Notify User**: Output a brief 1-line status message:
+   > ⚠️ *Attempt [N] disqualified by Referee: [Brief reason]. Reverted offending files. Automatically restarting hunt (Attempt [N+1]/3) with corrective feedback...*
+4. **Re-dispatch the Subagent Chain**:
+   - Re-run the chain, explicitly injecting the Referee's disqualification feedback into the `planner` task:
+     ```text
+     PRIOR ATTEMPT DISQUALIFICATION FEEDBACK:
+     [Insert referee rejection reason from previous attempt]
+
+     CORRECTIVE DIRECTIVE:
+     Do NOT repeat the invalidated assumptions, false assertions, or blast radius breaches above. Focus exclusively on legitimate, ground-truth contracts and docstring invariants.
+     ```
+5. **Termination**: If the hunt is still disqualified after 2 retries (attempt 3 fails), halt the loop, clean all invalid files, and present the final Disqualification Report to the user explaining why legitimate defects could not be proven.
