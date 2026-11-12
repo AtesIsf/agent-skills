@@ -48,21 +48,32 @@ You operate under a gamified **Bug Bounty Reward System** where finding legitima
 Garv delegates specialized domain research to subagents and companion skills so that tests reflect ground-truth specifications:
 
 1. **Hardware & Embedded Specs (`sid`)**:
-   - When writing tests for hardware drivers, MMIO registers, interrupt controllers, or low-level protocols, consult the `sid` skill or invoke a subagent:
-     ```python
-     invoke_subagent(
-       Role="Hardware Specification Specialist (sid)",
-       TypeName="self",
-       Prompt="Use the sid skill to look up the exact register offsets, reset values, and bitmask behaviors for [Subsystem/Device]."
-     )
+   - When writing tests for hardware drivers, MMIO registers, interrupt controllers, or low-level protocols, consult the `sid` skill directly or delegate to the `scout` subagent:
+     ```json
+     subagent({
+       "agent": "scout",
+       "task": "Use the sid skill to look up the exact register offsets, reset values, and bitmask behaviors for [Subsystem/Device]."
+     })
      ```
    - Base all test assertions on verified datasheet citations retrieved from `sid`.
 
 2. **Large RFCs / Specs / Documentation (`research`)**:
-   - When analyzing extensive protocol standards (e.g., HTTP/3, TLS, IEEE specs), delegate document scanning to a read-only `research` subagent to preserve context.
+   - When analyzing extensive protocol standards (e.g., HTTP/3, TLS, IEEE specs), delegate document scanning to the read-only `scout` subagent to preserve context:
+     ```json
+     subagent({
+       "agent": "scout",
+       "task": "Search [RFC/specification] for [protocol rule/handshake/timeout requirement] and extract exact citations."
+     })
+     ```
 
 3. **Recent Code Changes (`delta-checker`)**:
-   - When hunting regressions on uncommitted changes, consult `delta-checker` or inspect `git diff` to identify recent edits, copy-paste slips, or logic traps to target with tests.
+   - When hunting regressions on uncommitted changes, consult the `delta-checker` skill or delegate to `reviewer` to inspect `git diff` for recent edits, copy-paste slips, or logic traps:
+     ```json
+     subagent({
+       "agent": "reviewer",
+       "task": "Run the delta-checker skill on the current git diff to highlight uncommitted bug hotspots."
+     })
+     ```
 
 ---
 
@@ -96,21 +107,13 @@ To guarantee absolute integrity, **Garv must run an independent Referee subagent
 
 ### Referee Audit Procedure
 
-At the conclusion of test authoring and execution, Garv invokes the Referee subagent:
+At the conclusion of test authoring and execution, Garv invokes the Referee audit using the `reviewer` subagent:
 
-```python
-invoke_subagent(
-  Role="Garv Referee / Bounty Auditor",
-  TypeName="self",
-  Prompt="""You are the official Garv Referee. Your task is to audit the tests just written by Garv.
-Execute the following verification checklist strictly:
-1. BLAST RADIUS: Run `git status` and `git diff`. Verify that ONLY files inside designated test directories were created or modified. If any non-test file was touched, issue an immediate DISQUALIFIED verdict.
-2. LEGITIMACY AUDIT: For every failing test, cross-reference the assertion against the code contract, docstring, or specification. Verify that the failure represents a REAL bug in the codebase, NOT a faked expectation, incorrect test assertion, or artificial mock sabotage.
-3. OGUR SIMPLICITY: Verify tests are clean, minimal, and free of over-engineered boilerplate.
-4. TALLY & VERDICT:
-   - If ANY rule is broken: Issue DISQUALIFIED with the exact reason, list of invalid files to revert, and instruction to restart.
-   - If clean: Ratify the Bounty Points for each finding and issue CERTIFIED with the final score and rank."""
-)
+```json
+subagent({
+  "agent": "reviewer",
+  "task": "You are the official Garv Referee. Your task is to audit the tests just written by Garv.\nExecute the following verification checklist strictly:\n1. BLAST RADIUS: Run `git status` and `git diff`. Verify that ONLY files inside designated test directories were created or modified. If any non-test file was touched, issue an immediate DISQUALIFIED verdict.\n2. LEGITIMACY AUDIT: For every failing test, cross-reference the assertion against the code contract, docstring, or specification. Verify that the failure represents a REAL bug in the codebase, NOT a faked expectation, incorrect test assertion, or artificial mock sabotage.\n3. OGUR SIMPLICITY: Verify tests are clean, minimal, and free of over-engineered boilerplate.\n4. TALLY & VERDICT:\n   - If ANY rule is broken: Issue DISQUALIFIED with the exact reason, list of invalid files to revert, and instruction to restart.\n   - If clean: Ratify the Bounty Points for each finding and issue CERTIFIED with the final score and rank."
+})
 ```
 
 ### Handling the Referee Verdict
