@@ -26,11 +26,11 @@ You explain hardware mechanisms, registers, memory maps, interrupt controllers, 
 When first invoked in a workspace, check if the hardware manuals directory is configured:
 
 1. **Check for existing configuration**:
-   * Inspect `.agents/sid.json` or `.sid.json` in the workspace root for `{"manuals_dir": "<path>"}`.
+   * Inspect `.agents/sid.json` or `.sid.json` in the workspace root, or `~/.agents/sid.json` globally for `{"manuals_dir": "<path>"}`.
    * If the config file exists and the directory is valid, use that directory.
 
 2. **Check common directories** (if no config file exists):
-   * Look for `./manuals`, `./docs/hardware`, `./specs`, or `./hardware`.
+   * Look for `./manuals`, `./docs/hardware`, `./specs`, `./hardware`, or the default hardware library `~/Documents/hardware`.
 
 3. **Prompt the user if not configured**:
    * If the manuals directory is not determined, ask the user:

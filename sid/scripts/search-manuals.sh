@@ -15,10 +15,14 @@ if [ -z "$TARGET_DIR" ]; then
     TARGET_DIR=$(grep -o '"manuals_dir"[^:]*:[^"]*"[^"]*"' .agents/sid.json | cut -d'"' -f4)
   elif [ -f ".sid.json" ]; then
     TARGET_DIR=$(grep -o '"manuals_dir"[^:]*:[^"]*"[^"]*"' .sid.json | cut -d'"' -f4)
+  elif [ -f "$HOME/.agents/sid.json" ]; then
+    TARGET_DIR=$(grep -o '"manuals_dir"[^:]*:[^"]*"[^"]*"' "$HOME/.agents/sid.json" | cut -d'"' -f4)
   elif [ -d "manuals" ]; then
     TARGET_DIR="manuals"
   elif [ -d "docs/hardware" ]; then
     TARGET_DIR="docs/hardware"
+  elif [ -d "$HOME/Documents/hardware" ]; then
+    TARGET_DIR="$HOME/Documents/hardware"
   else
     echo "Error: Manuals directory not provided and not found in .agents/sid.json" >&2
     exit 1
