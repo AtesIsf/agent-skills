@@ -41,13 +41,16 @@ Start by understanding the current project context, then ask questions one at a 
 ## After the Design
 
 ### Documentation
-- Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-- Commit the design document to git
+- Write the validated design to a temporary file in `/tmp/` to avoid cluttering the repository/filesystem: `/tmp/brainstorming-<topic>-design.md` (or `/tmp/plans/YYYY-MM-DD-<topic>-design.md`).
+- **Git Safety**: Do NOT add or commit files to git unless the user explicitly requests moving the design document into the repository (e.g. `docs/plans/`) and committing it. Never run git staging or commit commands without explicit permission.
 
 ### Implementation (if continuing)
 - Ask: "Ready to set up for implementation?"
-- Create isolated workspace if using git worktrees
-- Create detailed implementation plan
+- You can offer to transition execution to Pi's subagents or workflow presets:
+  - For planning: delegate to `planner` or `/scout-and-plan`
+  - For full implementation: delegate to `/implement` (`scout` -> `planner` -> `worker`) or `/implement-and-review`
+  - For adversarial test-driven verification: run `garv`
+- If proceeding in this session: create detailed implementation plan (using isolated git worktrees if preferred)
 
 ## Key Principles
 

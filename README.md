@@ -15,11 +15,11 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
   - **One Question at a Time**: Asks focused questions iteratively (preferring multiple-choice) to clarify purpose, constraints, and success criteria without overwhelming the user.
   - **Explore Alternatives**: Proposes 2–3 technical approaches with trade-offs and recommendations before settling on a design.
   - **Incremental Validation**: Breaks the design into 200–300 word sections, confirming each part before proceeding.
-  - **Design Documentation**: Records the finalized design in `docs/plans/YYYY-MM-DD-<topic>-design.md` before transitioning to implementation planning.
+  - **Design Documentation**: Records the finalized design in `/tmp/brainstorming-<topic>-design.md` (or `/tmp/plans/YYYY-MM-DD-<topic>-design.md`) to avoid repo clutter. Follows strict git safety: prompts the user before copying or committing the plan into the repository.
 * **Credits**: Adapted from the open-source repository [obra/superpowers](https://github.com/obra/superpowers) by Jesse Vincent (licensed under MIT).
 
 ### `delta-checker`
-* **Description**: Audits uncommitted workspace changes (staged and unstaged git diffs) using the "ogur" lazy senior developer persona.
+* **Description**: Audits uncommitted workspace changes (staged and unstaged git diffs) using the "ogur" lazy senior developer persona. Dispatches the isolated `reviewer` subagent to keep large diffs out of the main session context.
 * **Checks**:
   - **Typos**: Misspelled identifiers, string keys, and parameters.
   - **Wrong Variable Usage**: Copy-paste slips (e.g., using `width` instead of `height`, loop index confusion, swapped arguments).
@@ -43,7 +43,8 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
 ### `sid`
 * **Description**: Hardware architecture and specification consultant. Uses local hardware manuals, datasheets, and specification documents to answer hardware queries, map software requirements to hardware mechanisms, and verify low-level interactions.
 * **Key Features**:
-  - **Hardware Manuals Discovery**: Automatically discovers manuals in user library directories (such as `~/Documents/hardware`), common project paths (`./manuals`, `./docs/hardware`, `./specs`), global configuration (`~/.agents/sid.json`), or workspace settings (`.agents/sid.json`).
+  - **Hardware Manuals Discovery**: Automatically discovers manuals in user library directories (such as `~/Documents/hardware`), common project paths (`./manuals`, `./docs/hardware`, `./specs`), global configuration (`~/.pi/agent/sid.json`), or workspace settings (`.pi/sid.json`, `.sid.json`).
+  - **Context-Preserving Scout Delegation**: Dispatches the `scout` subagent with low thinking to search large hardware PDFs and datasheets via `pdftotext` or helper scripts, returning clean, condensed facts without bloating the conversation context.
   - **Software-to-Hardware Mapping**: Explains the necessary hardware (e.g., interrupt controllers, CSRs, timers, MMIO), register offsets, bitfield layouts, and initialization order when building low-level software like OS dispatchers or device drivers.
   - **Hardware Deep Dive**: Demystifies magic registers, memory-mapped I/O, memory barriers/fences, and hardware/software responsibility boundaries.
   - **Mandatory Source Citations**: Strictly cites source references (manual filename, section, and PDF page numbers or line numbers) for every detail to guarantee verifiable, hallucination-free guidance.
