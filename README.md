@@ -1,8 +1,8 @@
-# Agent Skills
+# Agent Skills for Pi
 
-A centralized repository for storing and managing custom AI agent skills across different coding assistants and agent providers.
+A centralized repository for storing and managing custom AI agent skills for the **Pi Coding Agent** harness.
 
-Skills are structured knowledge packages containing instructions, runbooks, or behavioral guidelines that an AI agent loads progressively on demand.
+Skills are structured knowledge packages containing instructions, runbooks, or behavioral guidelines following the [Agent Skills specification](https://agentskills.io/specification) that Pi loads progressively on demand.
 
 ---
 
@@ -50,70 +50,24 @@ Skills are structured knowledge packages containing instructions, runbooks, or b
 
 ---
 
-## Global Setup (Provider-Specific Scripts)
+## Setup for Pi
 
-Executable scripts are provided in `scripts/` to create symbolic links in the global configuration directories of supported agent providers:
-
-### 1. Antigravity / agy (`link-agy.sh`)
-Links skills to `~/.gemini/config/skills/`:
-```bash
-./scripts/link-agy.sh
-```
-
-### 2. Claude Code (`link-claude.sh`)
-Links skills to `~/.claude/skills/`:
-```bash
-./scripts/link-claude.sh
-```
-
-### 3. OpenAI Codex (`link-codex.sh`)
-Links skills to `~/.codex/skills/`:
-```bash
-./scripts/link-codex.sh
-```
-
-### 4. Pi Coding Agent (`link-pi.sh`)
-Links skills to `<agent-dir>/skills/` (defaults to `~/.pi/agent/skills/` or `$PI_CODING_AGENT_DIR/skills/`):
+### Global Setup (`link-pi.sh`)
+Symlinks all skills into your global Pi agent skills directory (`~/.pi/agent/skills/` or `$PI_CODING_AGENT_DIR/skills/`):
 ```bash
 ./scripts/link-pi.sh
 ```
 
-> **Note**: Each script accepts an optional custom destination directory as its first argument (e.g., `./scripts/link-agy.sh /custom/path/skills`). Because directory symlinks are used, changes to existing skills take effect immediately without re-running the script. Re-run only when adding a new skill directory.
+> **Note**: Accepts an optional custom destination directory as its first argument (e.g., `./scripts/link-pi.sh /custom/path/skills`). Because directory symlinks are used, changes to existing skills take effect immediately without re-running the script. Re-run only when adding a new skill directory.
 
 ---
 
 ## Manual Setup
 
-If you prefer to link skills manually or use workspace-specific linking:
+If you prefer to link skills manually:
 
-### Symlink Globally
-
+### Global Setup
 ```bash
-# Antigravity (agy)
-mkdir -p ~/.gemini/config/skills
-ln -sfn "$PWD/brainstorming" ~/.gemini/config/skills/brainstorming
-ln -sfn "$PWD/delta-checker" ~/.gemini/config/skills/delta-checker
-ln -sfn "$PWD/garv" ~/.gemini/config/skills/garv
-ln -sfn "$PWD/ogur" ~/.gemini/config/skills/ogur
-ln -sfn "$PWD/sid" ~/.gemini/config/skills/sid
-
-# Claude Code
-mkdir -p ~/.claude/skills
-ln -sfn "$PWD/brainstorming" ~/.claude/skills/brainstorming
-ln -sfn "$PWD/delta-checker" ~/.claude/skills/delta-checker
-ln -sfn "$PWD/garv" ~/.claude/skills/garv
-ln -sfn "$PWD/ogur" ~/.claude/skills/ogur
-ln -sfn "$PWD/sid" ~/.claude/skills/sid
-
-# Codex
-mkdir -p ~/.codex/skills
-ln -sfn "$PWD/brainstorming" ~/.codex/skills/brainstorming
-ln -sfn "$PWD/delta-checker" ~/.codex/skills/delta-checker
-ln -sfn "$PWD/garv" ~/.codex/skills/garv
-ln -sfn "$PWD/ogur" ~/.codex/skills/ogur
-ln -sfn "$PWD/sid" ~/.codex/skills/sid
-
-# Pi Coding Agent
 mkdir -p ~/.pi/agent/skills
 ln -sfn "$PWD/brainstorming" ~/.pi/agent/skills/brainstorming
 ln -sfn "$PWD/delta-checker" ~/.pi/agent/skills/delta-checker
@@ -124,26 +78,13 @@ ln -sfn "$PWD/sid" ~/.pi/agent/skills/sid
 
 ### Workspace / Project-Specific Setup
 
-To link a skill into an individual project workspace:
+To link skills into an individual project workspace:
 
-* **Antigravity / agy**:
-  ```bash
-  mkdir -p /path/to/project/.agents/skills
-  ln -sfn /path/to/agent-skills/garv /path/to/project/.agents/skills/garv
-  ln -sfn /path/to/agent-skills/sid /path/to/project/.agents/skills/sid
-  ```
-* **Claude Code**:
-  ```bash
-  mkdir -p /path/to/project/.claude/skills
-  ln -sfn /path/to/agent-skills/garv /path/to/project/.claude/skills/garv
-  ln -sfn /path/to/agent-skills/sid /path/to/project/.claude/skills/sid
-  ```
-* **Pi Coding Agent**:
-  ```bash
-  mkdir -p /path/to/project/.pi/skills
-  ln -sfn /path/to/agent-skills/garv /path/to/project/.pi/skills/garv
-  ln -sfn /path/to/agent-skills/sid /path/to/project/.pi/skills/sid
-  ```
+```bash
+mkdir -p /path/to/project/.pi/skills
+ln -sfn /path/to/agent-skills/garv /path/to/project/.pi/skills/garv
+ln -sfn /path/to/agent-skills/sid /path/to/project/.pi/skills/sid
+```
 
 ---
 
@@ -163,7 +104,7 @@ To link a skill into an individual project workspace:
 
    # My New Skill
    ```
-3. Run the provider script (e.g., `./scripts/link-agy.sh`) to link the new skill.
+3. Run `./scripts/link-pi.sh` to link the new skill into Pi.
 
 ---
 
