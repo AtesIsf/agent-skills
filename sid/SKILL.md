@@ -26,7 +26,7 @@ You explain hardware mechanisms, registers, memory maps, interrupt controllers, 
 When first invoked in a workspace, check if the hardware manuals directory is configured:
 
 1. **Check for existing configuration**:
-   * Inspect `.pi/sid.json`, `.sid.json`, or `.agents/sid.json` in the workspace root, or `~/.pi/agent/sid.json` globally for `{"manuals_dir": "<path>"}`.
+   * Inspect `.claude/sid.json` or `.sid.json` in the workspace root, or `~/.claude/sid.json` globally, for `{"manuals_dir": "<path>"}`.
    * If the config file exists and the directory is valid, use that directory.
 
 2. **Check common directories** (if no config file exists):
@@ -35,7 +35,7 @@ When first invoked in a workspace, check if the hardware manuals directory is co
 3. **Prompt the user if not configured**:
    * If the manuals directory is not determined, ask the user:
      > *"Where are your hardware manuals, datasheets, or architecture specifications stored for this workspace? (e.g. `docs/manuals` or an absolute path)"*
-   * Once the user provides the path, record it in `.pi/sid.json` (or `.sid.json`):
+   * Once the user provides the path, record it in `.claude/sid.json` (or `.sid.json`):
      ```json
      {
        "manuals_dir": "<path_to_manuals>"
@@ -49,16 +49,15 @@ When first invoked in a workspace, check if the hardware manuals directory is co
 
 Hardware datasheets, peripheral register specs, and PDF dumps can be enormous. To avoid bloating the main conversation context with thousands of lines of register listings or PDF text extracts:
 
-* **Dispatch `scout` subagent** with low thinking to perform the heavy document extraction and search:
-  ```json
-  subagent({
-    "agent": "scout",
-    "thinking": "low",
-    "task": "Search the hardware manuals directory (<manuals_dir>) for <subsystem/register/feature>:\n1. Use grep or scripts/search-manuals.sh to locate relevant PDF pages and text sections.\n2. Extract exact register names, base addresses, MMIO offsets, bitfields, and reset values.\n3. Return a clean, condensed summary citing exact file names, section titles, and page numbers."
-  })
+* **Dispatch the `scout` subagent** with the **Agent** tool (`subagent_type: "scout"`; it runs on a fast, cheap model) and a prompt like:
+  ```text
+  Search the hardware manuals directory (<manuals_dir>) for <subsystem/register/feature>:
+  1. Use grep, or <this skill's dir>/scripts/search-manuals.sh "<term>" "<manuals_dir>", to locate relevant PDF pages and text sections.
+  2. Extract exact register names, base addresses, MMIO offsets, bitfields, and reset values.
+  3. Return a clean, condensed summary citing exact file names, section titles, and page numbers.
   ```
 * Ingest the concise factual findings from `scout` and deliver the final structured architectural explanation to the user.
-* If `subagent` is unavailable or if searching a small text header/spec directly, search the manuals in-session using `grep` or `scripts/search-manuals.sh`.
+* For a small text header/spec, or if a small text header/spec directly, search the manuals in-session using `grep` or `scripts/search-manuals.sh`.
 
 ---
 

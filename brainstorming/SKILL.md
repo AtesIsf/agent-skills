@@ -46,10 +46,10 @@ Start by understanding the current project context, then ask questions one at a 
 
 ### Implementation (if continuing)
 - Ask: "Ready to set up for implementation?"
-- You can offer to transition execution to Pi's subagents or workflow presets:
-  - For planning: delegate to `planner` or `/scout-and-plan`
-  - For full implementation: delegate to `/implement` (`scout` -> `planner` -> `worker`) or `/implement-and-review`
-  - For adversarial test-driven verification: run `garv`
+- Offer the next step:
+  - Planning only: `/scout-and-plan <task>` (scout -> planner workflow)
+  - Full implementation: `/implement <task>` (worker -> reviewer -> worker workflow)
+  - Adversarial test-driven verification: `/garv <target>`
 - If proceeding in this session: create detailed implementation plan (using isolated git worktrees if preferred)
 
 ## Key Principles
